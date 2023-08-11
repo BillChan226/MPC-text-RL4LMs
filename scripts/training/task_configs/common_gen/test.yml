@@ -1,0 +1,195 @@
+# # tokenizer:
+# #   model_name: t5-base
+# #   padding_side: left
+# #   truncation_side: left
+# #   pad_token_as_eos_token: False
+# tokenizer:
+#   model_name: potsawee/t5-large-generation-squad-QuestionAnswer
+#   padding_side: left
+#   truncation_side: left
+#   pad_token_as_eos_token: True
+
+# reward_fn:
+#   id: "intent_accuracy"
+#   args:
+#     intent_coeff: 0.5
+#     auto_coeff: 0.5
+#   # id: meteor
+#   # args:
+#   #   shaping_fn: "common_gen_repeat_penalty"MPC-text trajectory controller
+#     # values:
+#     # - id: rouge_combined
+#     #   args:
+#     #     shaping_fn: "common_gen_repeat_penalty"
+#     # - id: meteor
+#     #   args:
+#     #     shaping_fn: "common_gen_repeat_penalty"
+#     # - id: rouge
+#     #   args:
+#     #     rouge_type: "rouge1"
+#     #     shaping_fn: "common_gen_repeat_penalty"
+#     # - id: spider
+#     #   args:
+#     #     spice_coeff: 0.0
+#     #     cider_coeff: 1.0
+#     #     shaping_fn: "common_gen_repeat_penalty_batched"
+#     # - id: spider
+#     #   args:
+#     #     spice_coeff: 1.0
+#     #     cider_coeff: 0.0
+#     #     shaping_fn: "common_gen_repeat_penalty_batched"
+#     # - id: spider
+#     #   args:
+#     #     spice_coeff: 0.5
+#     #     cider_coeff: 0.5
+#     #     shaping_fn: "common_gen_repeat_penalty_batched"
+
+
+# datapool:
+#   # id: commongen
+#   # args:
+#   #   concept_end_token: '.'
+#   #   concept_separator_token: ' '
+#   #   prefix: "generate a sentence with: "
+#   id: commonQA
+#   args:
+#     prefix: " " #"Geneate your reasoning process to answer this question: "
+#     suffix: " Options: "
+  
+
+# env:
+#   n_envs: 1
+#   args:
+#     max_prompt_length: 120 #20
+#     max_episode_length: 40
+#     terminate_on_eos: True
+#     # context_start_token: 0
+#     # prompt_truncation_side: "right"
+
+
+# alg:
+#   id: ppo
+#   args:
+#     n_steps: 256
+#     batch_size: 2
+#     verbose: 1
+#     learning_rate: 0.000002
+#     n_epochs: 5
+#     #ent_coef: 0.01
+#   kl_div:
+#     coeff: 0.001
+#     target_kl: 2.0
+#   policy:
+#     id: seq2seq_lm_actor_critic_policy # causal_lm_actor_critic_policy #
+#     args:
+#       model_name: potsawee/t5-large-generation-squad-QuestionAnswer #rajkumarrrk/t5-common-gen #t5-base
+#       apply_model_parallel: True
+#       prompt_truncation_side: "right"
+#       generation_kwargs:
+#         do_sample: True
+#         top_k: 20
+#         min_length: 5
+#         max_new_tokens: 200
+    
+# train_evaluation:
+#   eval_batch_size: 1
+#   n_iters: 10
+#   eval_every: 20
+#   save_every: 1
+#   metrics:
+#     - id: meteor
+#       args: {}
+#     - id: rouge
+#     - id: bleu
+#       args: {}
+#     - id: bert_score
+#       args:
+#         language: en
+#     - id: cider
+#     - id: diversity
+#       args: {}
+#   generation_kwargs:
+#     num_beams: 5
+#     min_length: 5
+#     max_new_tokens: 200
+
+tokenizer:
+  model_name: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base # TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #potsawee/t5-large-generation-squad-QuestionAnswer #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #gpt2
+  padding_side: left
+  truncation_side: left
+  pad_token_as_eos_token: True
+
+reward_fn:
+  id: "intent_accuracy"
+  args:
+    intent_coeff: 0.5
+    auto_coeff: 0.5
+
+
+datapool:
+  id: commonQA
+  args:
+    prefix: "Provide proof and reasons to answer this question: " #"Geneate your reasoning process to answer this question: "
+    suffix: " Your answer must be from the following options: "
+
+env:
+  n_envs: 1
+  args:
+    max_prompt_length: 128
+    max_episode_length: 100
+    terminate_on_eos: True
+
+alg:
+  id: ppo
+  args: 
+    n_steps: 128
+    batch_size: 2
+    verbose: 1
+    learning_rate: 0.000001
+    n_epochs: 5
+    
+  kl_div:
+    coeff: 0.2
+    target_kl: 0.05
+ 
+  policy:
+    id: causal_lm_actor_critic_policy
+    args:
+      model_name: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #rajkumarrrk/gpt2-fine-tuned-on-daily-dialog
+      apply_model_parallel: True
+      generation_kwargs:
+        do_sample: True
+        top_k: 20
+        min_length: 2
+        max_new_tokens: 30
+      
+train_evaluation:
+  eval_batch_size: 2
+  n_iters: 50
+  eval_every: 5
+  save_every: 10
+  metrics:
+    - id: intent_accuracy
+    - id: causal_perplexity
+      args:
+        tokenizer_id: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #gpt2
+        stride: 128
+        model_type: causal
+    - id: diversity
+      args: {}
+    - id: meteor
+      args: {}
+    - id: rouge
+    - id: bleu
+      args: {}
+    - id: bert_score
+      args:
+        language: en
+    - id: sacre_bleu
+      args:
+        tokenize: "intl"
+  generation_kwargs:
+    do_sample: True
+    top_k: 20
+    min_length: 2
+    max_new_tokens: 250
