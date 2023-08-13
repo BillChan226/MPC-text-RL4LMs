@@ -21,6 +21,7 @@ from rl4lms.data_pools.custom_text_generation_pools import (
     WMT16NewsOnlyDatasetEnDe,
     DailyDialog,
     commonQA,
+    strategyQA,
 )
 from rl4lms.data_pools.text_generation_pool import TextGenPool
 from rl4lms.envs.text_generation.alg_wrappers import wrap_onpolicy_alg
@@ -101,6 +102,7 @@ class DataPoolRegistry:
         "crd3": CRD3DialogueGeneration,
         "daily_dialog": DailyDialog,
         "commonQA": commonQA,
+        "strategyQA": strategyQA,
     }
 
     @classmethod

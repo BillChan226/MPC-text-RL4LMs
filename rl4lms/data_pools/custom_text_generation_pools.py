@@ -192,6 +192,49 @@ class commonQA(TextGenPool):
         return pool_instance
 
 
+class strategyQA(TextGenPool):
+    @classmethod
+    def prepare(cls, split: str, suffix: str = "",
+                prefix: str = "",):
+        dataset = load_dataset("wics/strategy-qa")
+        dataset_split = strategyQA.gen_split_name(split)
+        input("dataset loaded")
+        samples = []
+        for ix, item in tqdm(enumerate(dataset[dataset_split]),
+                             desc="Tokenizing dataset",
+                             total=len(dataset[dataset_split])):
+
+            if item["answer"] == True:
+                judge = "Yes."
+            else:
+                judge = "No."
+
+            reference = judge
+            
+            for i in item["facts"]:
+                reference = reference + i
+            
+            reference = reference + "Thus the answer is " + judge
+            sample = Sample(id=f"{split}_{ix}",
+                                prompt_or_input_text=item["question"],
+                                references = reference
+                                )
+            samples.append(sample)
+        pool_instance = cls(samples)
+        return pool_instance
+
+    @staticmethod
+    def gen_split_name(split: str):
+        if split == "train":
+            split_name = "test"
+        elif split == "val":
+            split_name = "test"
+        elif split == "test":
+            split_name = "test"
+        else:
+            raise NotImplementedError
+        return split_name
+
 class Xsum(TextGenPool):
     @classmethod
     def prepare(cls, split: str, prompt_suffix: str = "TL;DR:"):

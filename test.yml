@@ -114,7 +114,7 @@
 #     max_new_tokens: 200
 
 tokenizer:
-  model_name: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base # TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #potsawee/t5-large-generation-squad-QuestionAnswer #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #gpt2
+  model_name: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base # TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #potsawee/t5-large-generation-squad-QuestionAnswer #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #gpt2
   padding_side: left
   truncation_side: left
   pad_token_as_eos_token: True
@@ -127,7 +127,7 @@ reward_fn:
 
 
 datapool:
-  id: commonQA
+  id: strategyQA
   args:
     prefix: "Provide proof and reasons to answer this question: " #"Geneate your reasoning process to answer this question: "
     suffix: " Your answer must be from the following options: "
@@ -155,7 +155,7 @@ alg:
   policy:
     id: causal_lm_actor_critic_policy
     args:
-      model_name: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #rajkumarrrk/gpt2-fine-tuned-on-daily-dialog
+      model_name: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #rajkumarrrk/gpt2-fine-tuned-on-daily-dialog
       apply_model_parallel: True
       generation_kwargs:
         do_sample: True
@@ -172,7 +172,7 @@ train_evaluation:
     - id: intent_accuracy
     - id: causal_perplexity
       args:
-        tokenizer_id: Qwen/Qwen-7B #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #gpt2
+        tokenizer_id: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #gpt2
         stride: 128
         model_type: causal
     - id: diversity
