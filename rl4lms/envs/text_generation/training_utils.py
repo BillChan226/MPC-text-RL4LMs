@@ -95,7 +95,6 @@ def build_env(env_config: Dict[str, Any],
 
     return env
 
-
 def build_alg(alg_config: Dict[str, Any],
               env: TextGenEnv,
               tracker: Tracker,
@@ -195,11 +194,13 @@ class OnPolicyTrainer(TrainerWarmStartMixin):
     def train_and_eval(self):
         # evaluate on val and test set before fine-tuning once
         iter_start = self._trainer_state["current_iter"]
-        self._evaluate_on_datapools(epoch=iter_start)
+        # self._evaluate_on_datapools(epoch=iter_start)
 
         # train for given number of iters
         for epoch in range(iter_start, self._n_iters):
             # current state
+
+            print("epoch: ", epoch)
             self._trainer_state["current_iter"] = epoch
 
             # inner rollout and learn loop for on-policy algorithm

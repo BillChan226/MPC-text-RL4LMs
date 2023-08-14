@@ -49,12 +49,11 @@ def evaluate_on_samples(
         all_prompt_texts.extend(batch_prompt_texts)
         all_meta_infos.extend(batch_meta_infos)
 
-        print("reference: ", batch[0].references)
-        print("prompt: ", batch[0].prompt_or_input_text)
-        print("metadata: ", batch[0].meta_data)
-        print("output: ", batch_generated_texts[0])
-        input("evaluated")
-
+        # print("reference: ", batch[0].references)
+        # print("prompt: ", batch[0].prompt_or_input_text)
+        # print("metadata: ", batch[0].meta_data)
+        # print("output: ", batch_generated_texts[0])
+        # input("evaluated")
 
     # compute metrics
     corpus_level_metrics = {}

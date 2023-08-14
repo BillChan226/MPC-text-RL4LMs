@@ -437,6 +437,14 @@ class MaskedCausalLMActorCriticPolicy(
             self._policy_model, input_ids, past_model_kwargs
         )
 
+        print("model inputs: ", model_inputs) 
+
+        print("actins", actions)
+
+        print("action_masks", action_masks)
+
+        input("forward")
+
         # forward pass to transformers
         output = self._policy_model(output_hidden_states=True, **model_inputs)
 

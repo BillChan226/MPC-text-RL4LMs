@@ -111,6 +111,7 @@ class TextGenEnv(Env):
         self.__current_obs = self.__current_obs.update(action, self.tokenizer)
 
         # decide if the episode is finished or not
+        print("action: ", action)
         done = (action == self.tokenizer.eos_token_id and self._terminate_on_eos) or (
             self.__time_step == self.max_steps
         )

@@ -1,0 +1,8 @@
+{"ppo/entropy_loss": -0.86466875474772, "ppo/policy_gradient_loss": 0.03230413291603327, "ppo/value_loss": 0.07347323281672971, "ppo/approx_kl": 0.30029046535491943, "ppo/explained_variance": -0.8495674133300781}
+{"ppo/entropy_loss": -2.35151119151742, "ppo/policy_gradient_loss": 0.10114962090738118, "ppo/value_loss": 0.0689597700602235, "ppo/approx_kl": 0.9381908178329468, "ppo/explained_variance": -1.0859408378601074}
+{"ppo/entropy_loss": -0.7245509619267096, "ppo/policy_gradient_loss": 0.0010609879158437253, "ppo/value_loss": 0.06068142491925528, "ppo/approx_kl": 0.26164132356643677, "ppo/explained_variance": -3.5739235877990723}
+{"ppo/entropy_loss": -1.6337182356000313, "ppo/policy_gradient_loss": 0.14338481463491917, "ppo/value_loss": 0.060552897096386005, "ppo/approx_kl": 0.6024327278137207, "ppo/explained_variance": -3.8674635887145996}
+{"ppo/entropy_loss": -1.2518025703590865, "ppo/policy_gradient_loss": 0.1127537963911891, "ppo/value_loss": 0.09603867392802386, "ppo/approx_kl": 0.3768426775932312, "ppo/explained_variance": -2.564807176589966}
+{"ppo/entropy_loss": -0.8488342900981138, "ppo/policy_gradient_loss": 0.023499781265854836, "ppo/value_loss": 0.054855322867138054, "ppo/approx_kl": 0.5992368459701538, "ppo/explained_variance": -1.4591562747955322}
+{"ppo/entropy_loss": -0.8828080202064029, "ppo/policy_gradient_loss": 0.05910384021699429, "ppo/value_loss": 0.07554711948736781, "ppo/approx_kl": 0.7754122018814087, "ppo/explained_variance": -1.883270025253296}
+{"ppo/entropy_loss": -0.7845504209453452, "ppo/policy_gradient_loss": 0.00971489460207522, "ppo/value_loss": 0.10125830350377782, "ppo/approx_kl": 0.5642445087432861, "ppo/explained_variance": -1.3188326358795166}

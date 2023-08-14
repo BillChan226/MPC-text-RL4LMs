@@ -198,7 +198,7 @@ class strategyQA(TextGenPool):
                 prefix: str = "",):
         dataset = load_dataset("wics/strategy-qa")
         dataset_split = strategyQA.gen_split_name(split)
-        input("dataset loaded")
+        # input("dataset loaded")
         samples = []
         for ix, item in tqdm(enumerate(dataset[dataset_split]),
                              desc="Tokenizing dataset",
@@ -214,7 +214,7 @@ class strategyQA(TextGenPool):
             for i in item["facts"]:
                 reference = reference + i
             
-            reference = reference + "Thus the answer is " + judge
+            reference = reference + "Thus the answer to the question is " + judge
             sample = Sample(id=f"{split}_{ix}",
                                 prompt_or_input_text=item["question"],
                                 references = reference

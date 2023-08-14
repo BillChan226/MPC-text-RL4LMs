@@ -77,6 +77,8 @@ def compute_batched_rewards(
 
     # compute rewards all at once
     rewards = reward_fn(prompts, generated_texts, reference_texts, is_dones, meta_infos)
+    print("prompts", prompts)
+    print("text rewards", rewards)
     # rewards = rewards.numpy().flatten()
 
     # override the rewards in transitions
@@ -85,6 +87,7 @@ def compute_batched_rewards(
         episode_wise_transitions[env_ix][trans_ix].total_reward = (
             reward + episode_wise_transitions[env_ix][trans_ix].kl_reward
         )
+        print("override reward: ", reward)
 
 
 def wrap_onpolicy_alg(
@@ -156,11 +159,15 @@ def wrap_onpolicy_alg(
             # generate text using the model
             obs_tensor = obs_as_tensor(current_obs, self.device)
             generation_inputs = self.policy.get_inputs_for_generation(obs_tensor)
+            print("self.policy", self.policy)
             gen_output = self.policy.generate(
                 input_ids=generation_inputs.inputs,
                 attention_mask=generation_inputs.attention_masks,
                 tokenizer=tokenizer,
             )
+            # print("current_obs: ", current_obs)
+            print("gen_output: ", gen_output)
+            input("generated one output")
 
             # process them one step at a time to collect rollout info
             episode_wise_transitions = [[] for _ in range(self.env.num_envs)]
@@ -242,6 +249,9 @@ def wrap_onpolicy_alg(
                 actions = actions_tensor.cpu().numpy()
                 new_obs, rewards, dones, infos = self.env.step(actions)
 
+                print("rewards", rewards)
+                print("dones", dones)
+
                 self.num_timesteps += self.env.num_envs
 
                 # compute total rewards
@@ -293,10 +303,12 @@ def wrap_onpolicy_alg(
             # if the reward function is batchable, we override the rewards here
             if isinstance(self.reward_fn, BatchedRewardFunction):
                 compute_batched_rewards(episode_wise_transitions, self.reward_fn)
-
+            
             advantages_computed = False
             for ep_ix, transitions in enumerate(episode_wise_transitions):
+                print("ep_ix", ep_ix)
                 ep_length = len(transitions)
+                print("ep_length", ep_length)
                 total_reward = 0.0
                 total_kl_reward = 0.0
                 for transition_ix, transition in enumerate(transitions):
@@ -345,8 +357,10 @@ def wrap_onpolicy_alg(
                         advantages_computed = True
 
                 rollout_info["rollout_info/ep_rew"].append(total_reward)
+                print("total_reward", total_reward)
                 rollout_info["rollout_info/ep_lens"].append(ep_length)
                 rollout_info["rollout_info/ep_kl_rew"].append(total_kl_reward)
+                print("total_kl_reward", total_kl_reward)
             return rollout_info
 
         def collect_rollouts(

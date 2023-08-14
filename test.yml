@@ -114,17 +114,15 @@
 #     max_new_tokens: 200
 
 tokenizer:
-  model_name: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base # TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #potsawee/t5-large-generation-squad-QuestionAnswer #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #gpt2
+  model_name: /home/xyq/SS-RLHF/gpt2-wiki-QA #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base # TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #potsawee/t5-large-generation-squad-QuestionAnswer #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #gpt2
   padding_side: left
   truncation_side: left
   pad_token_as_eos_token: True
 
 reward_fn:
-  id: "intent_accuracy"
+  id: bert_score
   args:
-    intent_coeff: 0.5
-    auto_coeff: 0.5
-
+    language: en
 
 datapool:
   id: strategyQA
@@ -135,7 +133,7 @@ datapool:
 env:
   n_envs: 1
   args:
-    max_prompt_length: 128
+    max_prompt_length: 64
     max_episode_length: 100
     terminate_on_eos: True
 
@@ -155,41 +153,44 @@ alg:
   policy:
     id: causal_lm_actor_critic_policy
     args:
-      model_name: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #rajkumarrrk/gpt2-fine-tuned-on-daily-dialog
+      model_name: /home/xyq/SS-RLHF/gpt2-wiki-QA #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #potsawee/t5-large-generation-squad-QuestionAnswer #Writer/palmyra-3B #rajkumarrrk/gpt2-fine-tuned-on-daily-dialog
       apply_model_parallel: True
       generation_kwargs:
         do_sample: True
         top_k: 20
         min_length: 2
-        max_new_tokens: 30
+        max_new_tokens: 128
       
 train_evaluation:
-  eval_batch_size: 2
+  eval_batch_size: 64
   n_iters: 50
   eval_every: 5
   save_every: 10
   metrics:
-    - id: intent_accuracy
+    # - id: bleurt
     - id: causal_perplexity
       args:
-        tokenizer_id: /home/xyq/SS-RLHF/output #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #gpt2
+        tokenizer_id: /home/xyq/SS-RLHF/gpt2-wiki-QA #Writer/palmyra-base #Writer/palmyra-small #Writer/palmyra-base #Writer/palmyra-3B #Writer/palmyra-base #Writer/palmyra-small #Qwen/Qwen-7B #Writer/palmyra-base #TheBloke/Dolphin-Llama2-7B-GPTQ #Writer/palmyra-3B #gpt2
         stride: 128
         model_type: causal
     - id: diversity
       args: {}
-    - id: meteor
-      args: {}
-    - id: rouge
-    - id: bleu
-      args: {}
     - id: bert_score
       args:
-        language: en
-    - id: sacre_bleu
-      args:
-        tokenize: "intl"
+          language: en
+    # - id: meteor
+    #   args: {}
+    # - id: rouge
+    # - id: bleu
+    #   args: {}
+    # - id: bert_score
+    #   args:
+    #     language: en
+    # - id: sacre_bleu
+    #   args:
+    #     tokenize: "intl"
   generation_kwargs:
     do_sample: True
     top_k: 20
     min_length: 2
-    max_new_tokens: 250
+    max_new_tokens: 128
